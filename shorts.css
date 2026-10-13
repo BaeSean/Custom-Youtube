@@ -1,0 +1,43 @@
+/* Preserve native scroll-snap slot dimensions and the original player nodes. */
+ytd-shorts.cys-video-active #cinematic-container,
+ytd-shorts.cys-video-active #shorts-cinematic-container { display:none!important; }
+ytd-shorts.cys-video-active .reel-video-in-sequence-thumbnail { visibility:hidden!important; }
+/* The current reel's duplicate frame also flashes during native close animation. */
+ytd-shorts .reel-video-in-sequence-new:has(#shorts-player:not(.unstarted-mode) video) > .reel-video-in-sequence-thumbnail { visibility:hidden!important; }
+/* Newly attached players inherit their saved rectangle before script discovery. */
+ytd-shorts.cys-video-active #shorts-player {
+  position:fixed!important;inset:auto!important;left:var(--cys-player-x)!important;top:var(--cys-player-y)!important;
+  width:var(--cys-player-w)!important;height:var(--cys-player-h)!important;
+  min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;
+  transform:none!important;transition:none!important;overflow:hidden!important;
+}
+.cys-path { transform:none!important;translate:none!important;rotate:none!important;scale:none!important;filter:none!important;perspective:none!important;contain:none!important;will-change:auto!important;transition:none!important; }
+/* Shorts controls are siblings of the player, not children of its video box. */
+ytd-shorts.cys-video-active ytd-reel-video-renderer:has(#shorts-player) .player-controls,
+ytd-shorts.cys-video-active ytd-reel-video-renderer:has(#shorts-player) #scrubber {
+  position:fixed!important;inset:auto!important;left:var(--cys-player-x)!important;
+  width:var(--cys-player-w)!important;min-width:0!important;max-width:none!important;
+  margin:0!important;transform:none!important;transition:none!important;z-index:101!important;
+}
+ytd-shorts.cys-video-active ytd-reel-video-renderer:has(#shorts-player) .player-controls { top:var(--cys-player-y)!important; }
+ytd-shorts.cys-video-active ytd-reel-video-renderer:has(#shorts-player) #scrubber { top:calc(var(--cys-player-y) + var(--cys-player-h) - 3px)!important; }
+.cys-comments-shell,.cys-video-shell { background:transparent!important;border-color:transparent!important;box-shadow:none!important; }
+.cys-panel {
+  position:fixed!important;inset:auto!important;left:var(--cys-x)!important;top:var(--cys-y)!important;
+  width:var(--cys-w)!important;height:var(--cys-h)!important;min-width:0!important;min-height:0!important;
+  max-width:none!important;max-height:none!important;margin:0!important;box-sizing:border-box!important;
+  transform:none!important;transition:none!important;overflow:auto!important;overscroll-behavior:contain;z-index:100!important;
+  background:var(--yt-spec-base-background,#0f0f0f);color:var(--yt-spec-text-primary,#f1f1f1);border-radius:10px;
+}
+.cys-panel[data-cys-panel="info"] { display:flex!important;justify-content:flex-start!important;padding:12px!important;overflow-x:hidden!important; }
+.cys-panel[data-cys-panel="related"] { display:flex!important;align-items:center!important;overflow-x:hidden!important;background:transparent!important;box-shadow:none!important; }
+.cys-panel[data-cys-panel="video"] { overflow:hidden!important;overscroll-behavior:auto; }
+.cys-panel[data-cys-panel="video"] ytd-player,
+.cys-panel[data-cys-panel="video"] #container,
+.cys-panel[data-cys-panel="video"] #shorts-player,
+.cys-panel[data-cys-panel="video"] .html5-video-container {
+  width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;
+}
+.cys-panel[data-cys-panel="video"] video { width:100%!important;height:100%!important;left:0!important;top:0!important;object-fit:contain!important;transform:none!important;transition:none!important; }
+.cys-panel[data-cys-panel="comments"] { display:flex!important;flex-direction:column!important; }
+.cys-panel[data-cys-panel="comments"] > #content { flex:1;min-height:0;overflow:auto;overscroll-behavior:contain; }

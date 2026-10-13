@@ -1,0 +1,148 @@
+/* Preserve the watch root and native content; never hide the whole page. */
+ytd-watch-flexy.cyt-hide-description ytd-watch-metadata #description,
+ytd-watch-flexy.cyt-hide-description [target-id="engagement-panel-structured-description"] {
+  display: none !important;
+}
+ytd-watch-flexy.cyt-theater-panels ytd-comments,
+ytd-watch-flexy.cyt-theater-panels ytd-watch-metadata #description,
+ytd-watch-flexy.cyt-theater-panels [target-id="engagement-panel-comments-section"],
+ytd-watch-flexy.cyt-theater-panels [target-id="engagement-panel-structured-description"] {
+  display: none !important;
+}
+ytd-watch-flexy.cyt-layout {
+  display: block !important;
+  position: relative !important;
+  height: var(--cyt-page-height) !important;
+  min-height: var(--cyt-page-height) !important;
+  padding: 0 !important;
+}
+.cyt-layout .cyt-path:not(.cyt-panel) {
+  display: contents !important;
+  visibility: visible !important;
+  transform: none !important;
+  translate: none !important;
+  rotate: none !important;
+  scale: none !important;
+  filter: none !important;
+  perspective: none !important;
+  contain: none !important;
+  content-visibility: visible !important;
+  will-change: auto !important;
+}
+.cyt-layout .cyt-unused { display: none !important; }
+.cyt-layout .cyt-panel {
+  display: var(--cyt-display, block) !important;
+  position: fixed !important;
+  inset: auto !important;
+  left: var(--cyt-x) !important;
+  top: var(--cyt-y) !important;
+  width: var(--cyt-w) !important;
+  height: var(--cyt-h) !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  overflow: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  transform: none !important;
+  translate: none !important;
+  rotate: none !important;
+  scale: none !important;
+  filter: none !important;
+  contain: none !important;
+  content-visibility: visible !important;
+  will-change: auto !important;
+  z-index: 1 !important;
+}
+.cyt-layout .cyt-panel[data-cyt-panel="video"] { overflow: hidden !important; }
+.cyt-layout .cyt-panel[data-cyt-panel="video"] #player-container-outer,
+.cyt-layout .cyt-panel[data-cyt-panel="video"] #player-container-inner,
+.cyt-layout .cyt-panel[data-cyt-panel="video"] #player-container,
+.cyt-layout .cyt-panel[data-cyt-panel="video"] ytd-player,
+.cyt-layout .cyt-panel[data-cyt-panel="video"] #movie_player {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* YouTube's container naturally has zero height; native video uses pixel sizes.
+   Establish a containing height BEFORE applying percentage sizes to the video. */
+.cyt-layout .cyt-panel[data-cyt-panel="video"] .html5-video-container {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+.cyt-layout .cyt-panel[data-cyt-panel="video"] video.html5-main-video {
+  width: 100% !important;
+  height: 100% !important;
+  left: 0 !important;
+  top: 0 !important;
+  object-fit: contain !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+.cyt-layout .cyt-panel[data-cyt-panel="video"] .ytp-chrome-bottom { width: calc(100% - 24px) !important; left: 12px !important; }
+.cyt-layout .cyt-panel #top-row { flex-wrap: wrap !important; }
+.cyt-layout .cyt-panel #actions { margin-left: 0 !important; }
+.cyt-layout .cyt-panel[data-cyt-panel="info"] h1 { white-space: normal !important; }
+.cyt-layout .cyt-panel[data-cyt-panel="info"] { overflow-x:hidden !important; }
+.cyt-layout .cyt-panel[data-cyt-panel="info"] #above-the-fold,
+.cyt-layout .cyt-panel[data-cyt-panel="info"] #top-row,
+.cyt-layout .cyt-panel[data-cyt-panel="info"] #owner,
+.cyt-layout .cyt-panel[data-cyt-panel="info"] #actions {
+  min-width:0 !important; max-width:100% !important; box-sizing:border-box !important;
+}
+.cyt-layout .cyt-panel[data-cyt-panel="info"] #actions { flex-wrap:wrap !important; }
+.cyt-layout .cyt-panel[data-cyt-panel="info"] h1 { overflow-wrap:anywhere; }
+.cyt-layout .cyt-panel[data-cyt-panel="related"],
+.cyt-layout .cyt-panel[data-cyt-panel="shorts"] { overflow-x: hidden !important; }
+.cyt-layout .cyt-panel[data-cyt-panel="shorts"] { visibility: visible !important; }
+/* Native description and comments share an exclusive sidebar. Custom slots do not. */
+.cyt-layout ytd-engagement-panel-section-list-renderer.cyt-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  visibility: visible !important;
+}
+.cyt-layout ytd-engagement-panel-section-list-renderer.cyt-panel > #content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.cyt-layout .cyt-panel[data-cyt-panel="related"] ytd-watch-next-secondary-results-renderer,
+.cyt-layout .cyt-panel[data-cyt-panel="related"] yt-lockup-view-model,
+.cyt-layout .cyt-panel[data-cyt-panel="related"] ytd-compact-video-renderer {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+.cyt-layout .cyt-panel[data-cyt-panel="related"] ytd-watch-next-secondary-results-renderer { width: 100% !important; }
+/* Keep YouTube's native grid, card widths, engagement header and composer. */
+.cyt-layout .cyt-grid,
+.cyt-layout .cyt-grid.cyt-path:not(.cyt-panel) {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(0, min(100%, var(--cyt-card-width)))) !important;
+}
+/* Hidden overflow still permits the native carousel buttons to scroll its track. */
+.cyt-layout .cyt-panel[data-cyt-panel="shorts"] #scroll-container {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}

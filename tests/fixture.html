@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CustomYT — 실제 video 요소 회귀 검증</title>
+<link rel="stylesheet" href="/content.css">
+<style>
+  :root {color-scheme:dark;--yt-spec-base-background:#101010;--yt-spec-text-primary:#f1f1f1;--yt-spec-badge-chip-background:#292929;}
+  body {margin:0;font:14px/1.6 system-ui;background:#101010;color:#eee;}
+  [hidden] {display:none!important;}
+  ytd-app {display:block;opacity:.999;}
+  ytd-masthead {display:flex;align-items:center;height:56px;gap:24px;padding:0 24px;position:sticky;top:0;background:#0f0f0f;z-index:2020;}
+  ytd-masthead strong {white-space:nowrap;font-size:18px;}
+  #center {flex:1;display:flex;justify-content:center;min-width:80px;}
+  #center input {width:min(100%,480px);border:1px solid #444;border-radius:24px;background:#111;padding:8px 18px;font:inherit;color:white;}
+  #end,#buttons {display:flex;align-items:center;gap:12px;flex-shrink:0;}
+  #avatar-btn {border-radius:50%;width:32px;height:32px;background:#547084;}
+  button {font:inherit;color:inherit;border:1px solid #555;border-radius:7px;background:#262626;padding:5px 10px;cursor:pointer;}
+  #test-tools {display:flex;gap:8px;align-items:center;padding:8px 24px;font-size:11px;background:#191919;}
+  #fixture-status {margin-right:auto;color:#aabbd0;}
+  #test-tools button {font-size:11px;}
+  ytd-watch-flexy {display:block;margin:18px 24px;}
+  #columns {display:flex;gap:24px;align-items:flex-start;}
+  #primary {width:68%;min-width:0;} #secondary {flex:1;min-width:0;}
+  ytd-watch-flexy:is([theater],[data-view="theater"]):not(.cyt-layout) #columns {display:block;}
+  ytd-watch-flexy:is([theater],[data-view="theater"]):not(.cyt-layout) #primary {width:100%;}
+  ytd-watch-flexy:is([theater],[data-view="theater"]):not(.cyt-layout) #player {height:520px;}
+  ytd-watch-flexy:is([theater],[data-view="theater"]):not(.cyt-layout) #secondary {width:100%;}
+  html.fixture-right-comments #columns {display:block;}
+  html.fixture-right-comments #primary {width:68%;}
+  html.fixture-right-comments #secondary {width:68%;}
+  html.fixture-right-comments #comments {position:absolute;left:72%;top:112px;width:26%;height:680px;overflow:auto;margin:0;}
+  #player {position:relative;height:380px;background:#000;border-radius:12px;overflow:hidden;}
+  #player-container-outer,#player-container-inner,#player-container,ytd-player,#movie_player {display:block;width:100%;height:100%;}
+  #movie_player {position:relative;}
+  /* Match YouTube: the video itself has pixel dimensions inside a 0-height parent. */
+  .html5-video-container {position:relative;height:0;}
+  video {position:absolute;object-fit:contain;}
+  /* Negative control: reproduces the 0.1.x percentage-height bug on demand. */
+  html.fixture-zero-height .cyt-layout .cyt-panel[data-cyt-panel="video"] .html5-video-container {height:0!important;}
+  .ytp-chrome-bottom {position:absolute;bottom:10px;left:12px;width:calc(100% - 24px);z-index:20;display:flex;gap:12px;align-items:center;background:#0008;}
+  ytd-watch-metadata,ytd-comments,ytd-reel-shelf-renderer,ytd-comment-thread-renderer,ytd-structured-description-content-renderer {display:block;}
+  ytd-watch-metadata h1 {font-size:20px;margin:14px 0;}
+  #top-row {display:flex;justify-content:space-between;padding:8px 0 16px;}
+  #description {background:#252525;border-radius:12px;padding:14px;margin:10px 0 20px;}
+  #description p {margin:0 0 10px;}
+  .row {padding:12px 4px;border-bottom:1px solid #292929;}
+  .row strong {display:block;} .row p {margin:4px 0;color:#aaa;}
+  .thumb {height:130px;border-radius:10px;margin-bottom:8px;background:linear-gradient(125deg,#365a65,#192d44);}
+  .short .thumb {height:180px;background:linear-gradient(130deg,#816847,#49233c);}
+  #comments {margin-top:18px;}
+  #native-extra {margin-top:14px;color:#999;}
+  #fixed-side-menu {position:fixed;right:8px;bottom:8px;z-index:50;}
+  ytd-engagement-panel-section-list-renderer {display:none;}
+  ytd-engagement-panel-section-list-renderer[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"] {display:block;position:fixed;right:24px;top:112px;width:360px;max-height:calc(100vh - 130px);overflow:auto;background:#202020;z-index:60;padding:12px;}
+  .fixture-regression #recommendations #contents {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+  .fixture-regression #recommendations [secondary-grid-columns="1"] #contents {grid-template-columns:1fr;}
+  .fixture-regression yt-lockup-view-model {display:block;min-width:0;}
+  .fixture-regression #recommendations ytd-reel-shelf-renderer {grid-column:1/-1;}
+  .fixture-regression ytd-engagement-panel-section-list-renderer[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"] {display:flex;flex-direction:column;box-sizing:border-box;left:72%;right:auto;width:26%;height:570px;padding:12px;border:1px solid #777;border-radius:12px;background:#252525;}
+  .fixture-regression ytd-engagement-panel-section-list-renderer > #content {flex:1;min-height:0;overflow:auto;}
+  .fixture-regression header,.fixture-regression footer {flex:none;padding:8px;}
+  .fixture-regression ytd-watch-flexy:is([theater],[data-view="theater"]):not(.cyt-layout) #primary {width:68%;}
+</style></head><body>
+<ytd-masthead><strong>▶ YouTube <small>검증용</small></strong><div id="center"><input placeholder="검색" aria-label="검색"></div><div id="end"><div id="buttons"><button>＋ 만들기</button><button aria-label="알림">♧</button><button id="avatar-btn" aria-label="프로필">C</button></div></div></ytd-masthead>
+<div id="test-tools"><span id="fixture-status">로컬 테스트 · Canvas 스트림을 재생하는 실제 video 요소</span><button id="verify">표시 검사</button><button id="next">다음 영상</button><button id="route">홈으로 이동</button><button id="theater">영화관 전환</button><button id="optional">Shorts 추가/제거</button></div>
+<ytd-app><ytd-watch-flexy video-id="fixture-1"><div id="columns"><div id="primary"><div id="primary-inner">
+<div id="player"><div id="player-container-outer"><div id="player-container-inner"><div id="player-container"><ytd-player><div id="movie_player"><div class="html5-video-container"><video class="html5-main-video" autoplay muted playsinline></video></div><div class="ytp-chrome-bottom"><button id="play">일시정지</button><span id="time">0:00</span><button class="ytp-size-button">기본 / 영화관</button><button id="fullscreen">전체화면</button></div></div></ytd-player></div></div></div></div>
+<ytd-watch-metadata><div id="above-the-fold"><h1>유튜브 화면 위에서 바로 편집하기</h1><div id="top-row"><span>CustomYT Studio　● 구독</span><span>♡ 좋아요　공유　저장</span></div><div id="description"><div id="description-inline-expander"><p>영상 설명입니다. 원본 DOM을 유지하면서 배치를 편집합니다.</p><p>실제 video 요소의 높이와 재생 시간을 검사합니다.</p></div></div></div></ytd-watch-metadata>
+<ytd-comments id="comments"></ytd-comments>
+</div></div><div id="secondary"><div id="related"><ytd-watch-next-secondary-results-renderer><div id="recommendations"></div><ytd-reel-shelf-renderer></ytd-reel-shelf-renderer></ytd-watch-next-secondary-results-renderer></div></div></div>
+<div id="fixed-side-menu"><button aria-label="설명">설명</button><button aria-label="댓글">댓글</button></div>
+<ytd-engagement-panel-section-list-renderer target-id="engagement-panel-structured-description" visibility="ENGAGEMENT_PANEL_VISIBILITY_HIDDEN"><div id="content"><ytd-structured-description-content-renderer><p>새 유튜브 구조의 영상 설명입니다. 유튜브의 설명 버튼을 눌렀을 때 열립니다.</p><p>닫힌 패널을 비어 있는 상자로 만들지 않습니다.</p></ytd-structured-description-content-renderer></div></ytd-engagement-panel-section-list-renderer>
+<ytd-engagement-panel-section-list-renderer target-id="engagement-panel-comments-section" visibility="ENGAGEMENT_PANEL_VISIBILITY_HIDDEN"><div id="content"><ytd-comments engagement-panel></ytd-comments></div></ytd-engagement-panel-section-list-renderer>
+<p id="native-extra">유튜브의 원래 페이지 내용</p>
+</ytd-watch-flexy></ytd-app>
+<script src="/tests/fixture.js"></script><script src="/layout.js"></script><script src="/content.js"></script>
+</body></html>

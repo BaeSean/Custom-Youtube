@@ -1,0 +1,10 @@
+{
+  "name": "customyt",
+  "version": "0.11.6",
+  "private": true,
+  "scripts": {
+    "check": "node --check layout.js && node --check content.js && node --check shorts.js && node --check tests/fixture.js && node --check tests/shorts-fixture.js && node --check tools/dev-server.cjs",
+    "test": "node --test tests/layout.test.cjs",
+    "dev": "node tools/dev-server.cjs"
+  }
+}

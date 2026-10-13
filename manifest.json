@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "CustomYT — 나만의 영상 화면",
+  "version": "0.11.6",
+  "description": "유튜브 영상 화면을 겹치지 않는 패널로 나누고, 드래그와 경계 조절로 배치합니다.",
+  "permissions": ["storage"],
+  "content_scripts": [{
+    "matches": ["https://www.youtube.com/*"],
+    "js": ["layout.js", "content.js", "shorts.js"],
+    "css": ["content.css", "shorts.css"],
+    "run_at": "document_idle"
+  }]
+}
